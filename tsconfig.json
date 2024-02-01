@@ -24,8 +24,14 @@
 		"paths": {
 			"@/*": ["src/*"],
 			"@components/*": ["src/components/*"],
+			"@auth/*": ["src/components/auth/*"],
+			"@shared/*": ["src/components/shared/*"],
 			"@assets/*": ["src/assets/*"],
-			"@styles/*": ["src/assets/styles/*"]
+			"@styles/*": ["src/assets/styles/*"],
+			"@constants/*": ["src/constants/*"],
+			"@router/*": ["src/router/*"],
+			"@layouts/*": ["src/layouts/*"],
+			"@pages/*": ["src/pages/*"]
 		}
 	},
 	"include": ["src"],

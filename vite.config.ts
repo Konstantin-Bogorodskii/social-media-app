@@ -8,8 +8,14 @@ export default defineConfig({
 		alias: {
 			'@': path.resolve(__dirname, './src'),
 			'@components': path.resolve(__dirname, './src/components'),
+			'@auth': path.resolve(__dirname, './src/components/auth'),
+			'@shared': path.resolve(__dirname, './src/components/shared'),
 			'@assets': path.resolve(__dirname, './src/assets'),
-			'@styles': path.resolve(__dirname, './src/assets/styles')
+			'@styles': path.resolve(__dirname, './src/assets/styles'),
+			'@constants': path.resolve(__dirname, './src/constants'),
+			'@router': path.resolve(__dirname, './src/router'),
+			'@layouts': path.resolve(__dirname, './src/layouts'),
+			'@pages': path.resolve(__dirname, './src/pages')
 		}
 	}
 });
