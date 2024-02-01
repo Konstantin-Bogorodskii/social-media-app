@@ -31,7 +31,8 @@
 			"@constants/*": ["src/constants/*"],
 			"@router/*": ["src/router/*"],
 			"@layouts/*": ["src/layouts/*"],
-			"@pages/*": ["src/pages/*"]
+			"@pages/*": ["src/pages/*"],
+			"@types/*": ["src/types/*"]
 		}
 	},
 	"include": ["src"],
