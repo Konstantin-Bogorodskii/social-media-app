@@ -6,7 +6,7 @@ const AuthLayout = () => {
 	const isAuthenticated = false;
 
 	return (
-		<main className="flex h-screen">
+		<>
 			{isAuthenticated ? (
 				<Navigate to="/" />
 			) : (
@@ -22,7 +22,7 @@ const AuthLayout = () => {
 					/>
 				</>
 			)}
-		</main>
+		</>
 	);
 };
 export default AuthLayout;
