@@ -32,7 +32,9 @@
 			"@router/*": ["src/router/*"],
 			"@layouts/*": ["src/layouts/*"],
 			"@pages/*": ["src/pages/*"],
-			"@types/*": ["src/types/*"]
+			"@types/*": ["src/types/*"],
+			"@lib/*": ["src/lib/*"],
+			"@services/*": ["src/services/*"]
 		}
 	},
 	"include": ["src"],
