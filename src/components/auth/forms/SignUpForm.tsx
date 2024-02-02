@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import { SignUpFormValidation } from '@/validation/validation';
+import { SignUpFormValidation } from '@/lib/validation/validation';
 
 import { z as zod } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,8 +19,12 @@ import { Input } from '@/components/ui/input';
 
 import LogoImg from '@assets/images/logo.svg';
 import Loader from '@shared/Loader';
+import userService from '@/services/userService';
+import { useToast } from '@/components/ui/use-toast';
 
 const SignUpForm = () => {
+	const { toast } = useToast();
+
 	const form = useForm<zod.infer<typeof SignUpFormValidation>>({
 		resolver: zodResolver(SignUpFormValidation),
 		defaultValues: {
@@ -31,11 +35,15 @@ const SignUpForm = () => {
 		}
 	});
 
-	function onSubmit(values: zod.infer<typeof SignUpFormValidation>) {
-		// console.log(values);
-	}
+	const handleSignUp = async (values: zod.infer<typeof SignUpFormValidation>) => {
+		const userAccount = userService.createUserAccount(values);
 
-	const handleSignUp = () => {};
+		if (!userAccount) {
+			return toast({
+				title: 'Sign up failed. Please try again.'
+			});
+		}
+	};
 
 	const isLoading = false;
 
