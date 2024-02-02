@@ -1,27 +1,27 @@
-export type INavLink = {
+export interface INavLink {
 	imgURL: string;
 	route: string;
 	label: string;
-};
+}
 
-export type IUpdateUser = {
+export interface IUpdateUser {
 	userId: string;
 	name: string;
 	bio: string;
 	imageId: string;
 	imageUrl: URL | string;
 	file: File[];
-};
+}
 
-export type INewPost = {
+export interface INewPost {
 	userId: string;
 	caption: string;
 	file: File[];
 	location?: string;
 	tags?: string;
-};
+}
 
-export type IUpdatePost = {
+export interface IUpdatePost {
 	postId: string;
 	caption: string;
 	imageId: string;
@@ -29,20 +29,20 @@ export type IUpdatePost = {
 	file: File[];
 	location?: string;
 	tags?: string;
-};
+}
 
-export type IUser = {
+export interface IUser {
 	id: string;
 	name: string;
 	username: string;
 	email: string;
 	imageUrl: string;
 	bio: string;
-};
+}
 
-export type INewUser = {
+export interface INewUser {
 	name: string;
 	email: string;
 	username: string;
 	password: string;
-};
+}
