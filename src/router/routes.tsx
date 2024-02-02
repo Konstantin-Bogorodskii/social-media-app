@@ -2,7 +2,6 @@ import { RouteObject } from 'react-router-dom';
 import PATHS from '@/constants/paths';
 
 // components
-import App from '@/App';
 import SignInForm from '@auth/forms/SignInForm';
 import SignUpForm from '@auth/forms/SignUpForm';
 
