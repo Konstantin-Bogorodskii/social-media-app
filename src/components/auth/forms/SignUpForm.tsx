@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { SignUpFormValidation } from '@/lib/validation/validation';
 
@@ -21,9 +21,19 @@ import LogoImg from '@assets/images/logo.svg';
 import Loader from '@shared/Loader';
 import userService from '@/services/userService';
 import { useToast } from '@/components/ui/use-toast';
+import queries from '@lib/react-query/queries';
+import { useAuthContext } from '@context/AuthContext';
 
 const SignUpForm = () => {
+	const navigate = useNavigate();
 	const { toast } = useToast();
+
+	const { checkAuthUser, isLoading: isAuthUserLoading } = useAuthContext();
+
+	const { mutateAsync: createUserAccount, isPending: isCreatingUserAccount } =
+		queries.useCreateUserAccount();
+
+	const { mutateAsync: signInAccout, isPending: isSigningInAccout } = queries.useSignInAccount();
 
 	const form = useForm<zod.infer<typeof SignUpFormValidation>>({
 		resolver: zodResolver(SignUpFormValidation),
@@ -35,7 +45,7 @@ const SignUpForm = () => {
 		}
 	});
 
-	const handleSignUp = async (values: zod.infer<typeof SignUpFormValidation>) => {
+	const onSubmit = async (values: zod.infer<typeof SignUpFormValidation>) => {
 		const userAccount = userService.createUserAccount(values);
 
 		if (!userAccount) {
@@ -43,9 +53,29 @@ const SignUpForm = () => {
 				title: 'Sign up failed. Please try again.'
 			});
 		}
-	};
 
-	const isLoading = false;
+		const session = signInAccout({
+			email: values.email,
+			password: values.password
+		});
+
+		if (!session) {
+			return toast({
+				title: 'Sign in failed. Please try again.'
+			});
+		}
+
+		const isLoggedIn = await checkAuthUser();
+
+		if (isLoggedIn) {
+			form.reset();
+			navigate('/');
+		} else {
+			return toast({
+				title: 'Sign up failed. Please try again.'
+			});
+		}
+	};
 
 	return (
 		<Form {...form}>
@@ -61,7 +91,7 @@ const SignUpForm = () => {
 				</p>
 
 				<form
-					onSubmit={form.handleSubmit(handleSignUp)}
+					onSubmit={form.handleSubmit(onSubmit)}
 					className="flex flex-col gap-5 w-full mt-4">
 					<FormField
 						control={form.control}
@@ -138,7 +168,7 @@ const SignUpForm = () => {
 					<Button
 						type="submit"
 						className="shad-button_primary">
-						{isLoading ? (
+						{isCreatingUserAccount ? (
 							<div className="flex-center gap-2">
 								<Loader /> Loading...
 							</div>
