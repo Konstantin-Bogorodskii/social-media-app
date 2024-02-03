@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { IUser } from '@/types/types';
 import { useNavigate } from 'react-router-dom';
+import { userService } from '@/services/userService';
+import PATHS from '@/constants/paths';
 
 export const INITIAL_USER = {
 	id: '',
@@ -40,21 +42,21 @@ function AuthContextProvider({ children }: { children: React.ReactNode }) {
 	const checkAuthUser = async () => {
 		setIsLoading(true);
 		try {
-			// const currentAccount = await getCurrentUser();
-			// const currentAccount = {};
-			// if (currentAccount) {
-			// 	setUser({
-			// 		id: currentAccount.$id,
-			// 		name: currentAccount.name,
-			// 		username: currentAccount.username,
-			// 		email: currentAccount.email,
-			// 		imageUrl: currentAccount.imageUrl,
-			// 		bio: currentAccount.bio
-			// 	});
-			// 	setIsAuthenticated(true);
+			const currentAccount = await userService.getCurrentUser();
 
-			// 	return true;
-			// }
+			if (currentAccount) {
+				setUser({
+					id: currentAccount.$id,
+					name: currentAccount.name,
+					username: currentAccount.username,
+					email: currentAccount.email,
+					imageUrl: currentAccount.imageUrl,
+					bio: currentAccount.bio
+				});
+				setIsAuthenticated(true);
+
+				return true;
+			}
 
 			return false;
 		} catch (error) {
@@ -67,9 +69,9 @@ function AuthContextProvider({ children }: { children: React.ReactNode }) {
 
 	useEffect(() => {
 		const cookieFallback = localStorage.getItem('cookieFallback');
-		// if (cookieFallback === '[]' || cookieFallback === null || cookieFallback === undefined) {
-		// 	navigate('/sign-in');
-		// }
+		if (cookieFallback === '[]' || cookieFallback === null || cookieFallback === undefined) {
+			navigate(PATHS.SIGN_IN);
+		}
 
 		checkAuthUser();
 	}, []);

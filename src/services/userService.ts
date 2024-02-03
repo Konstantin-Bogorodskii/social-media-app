@@ -1,7 +1,30 @@
-import { ID } from 'appwrite';
+import { ID, Query } from 'appwrite';
 import { account, avatars, databases } from '@lib/appwrite/config';
 import { INewUser } from '@/types/types';
 import { appwriteConfig } from './../lib/appwrite/config';
+
+import accountService from '@services/accountService';
+
+async function getCurrentUser() {
+	try {
+		const currentAccount = await accountService.getAccount();
+
+		if (!currentAccount) throw Error;
+
+		const currentUser = await databases.listDocuments(
+			appwriteConfig.databaseId,
+			appwriteConfig.usersCollectionId,
+			[Query.equal('accountId', currentAccount.$id)]
+		);
+
+		if (!currentUser) throw Error;
+
+		return currentUser.documents[0];
+	} catch (error) {
+		console.log(error);
+		return null;
+	}
+}
 
 async function createUserAccount(user: INewUser) {
 	try {
@@ -48,6 +71,7 @@ async function saveUserToDB(user: {
 }
 
 export const userService = {
+	getCurrentUser,
 	createUserAccount,
 	saveUserToDB
 };

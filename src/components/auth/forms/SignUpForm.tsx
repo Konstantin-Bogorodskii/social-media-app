@@ -19,21 +19,21 @@ import { Input } from '@/components/ui/input';
 
 import LogoImg from '@assets/images/logo.svg';
 import Loader from '@shared/Loader';
-import userService from '@/services/userService';
 import { useToast } from '@/components/ui/use-toast';
 import queries from '@lib/react-query/queries';
 import { useAuthContext } from '@context/AuthContext';
+import PATHS from '@/constants/paths';
 
 const SignUpForm = () => {
 	const navigate = useNavigate();
 	const { toast } = useToast();
 
-	const { checkAuthUser, isLoading: isAuthUserLoading } = useAuthContext();
+	const { checkAuthUser, isLoading: isAuthLoading } = useAuthContext();
 
-	const { mutateAsync: createUserAccount, isPending: isCreatingUserAccount } =
+	const { mutateAsync: createUserAccount, isPending: isCreatingUser } =
 		queries.useCreateUserAccount();
 
-	const { mutateAsync: signInAccout, isPending: isSigningInAccout } = queries.useSignInAccount();
+	const { mutateAsync: signInAccount, isPending: isSigningIn } = queries.useSignInAccount();
 
 	const form = useForm<zod.infer<typeof SignUpFormValidation>>({
 		resolver: zodResolver(SignUpFormValidation),
@@ -46,7 +46,7 @@ const SignUpForm = () => {
 	});
 
 	const onSubmit = async (values: zod.infer<typeof SignUpFormValidation>) => {
-		const userAccount = userService.createUserAccount(values);
+		const userAccount = await createUserAccount(values);
 
 		if (!userAccount) {
 			return toast({
@@ -54,7 +54,7 @@ const SignUpForm = () => {
 			});
 		}
 
-		const session = signInAccout({
+		const session = await signInAccount({
 			email: values.email,
 			password: values.password
 		});
@@ -69,7 +69,7 @@ const SignUpForm = () => {
 
 		if (isLoggedIn) {
 			form.reset();
-			navigate('/');
+			navigate(PATHS.HOME);
 		} else {
 			return toast({
 				title: 'Sign up failed. Please try again.'
@@ -168,7 +168,7 @@ const SignUpForm = () => {
 					<Button
 						type="submit"
 						className="shad-button_primary">
-						{isCreatingUserAccount ? (
+						{isCreatingUser ? (
 							<div className="flex-center gap-2">
 								<Loader /> Loading...
 							</div>

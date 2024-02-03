@@ -1,6 +1,16 @@
 import { account } from '@lib/appwrite/config';
 
-export async function signInAccount(user: { email: string; password: string }) {
+async function getAccount() {
+	try {
+		const currentAccount = await account.get();
+
+		return currentAccount;
+	} catch (error) {
+		console.log(error);
+	}
+}
+
+async function signInAccount(user: { email: string; password: string }) {
 	try {
 		const session = await account.createEmailSession(user.email, user.password);
 
@@ -21,6 +31,7 @@ async function signOutAccount() {
 }
 
 export const accountService = {
+	getAccount,
 	signInAccount,
 	signOutAccount
 };

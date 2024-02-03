@@ -12,31 +12,24 @@ import { HomePage } from '@/pages';
 // layouts
 import { AuthLayout, RootLayout } from '@/layouts';
 
-export const publicRoutes: RouteObject[] = [
+const routes: RouteObject[] = [
 	{
 		element: <App />,
+		path: PATHS.ROOT,
 		children: [
 			{
-				path: PATHS.ROOT,
 				element: <AuthLayout />,
 				children: [
 					{ path: PATHS.SIGN_IN, element: <SignInForm /> },
 					{ path: PATHS.SIGN_UP, element: <SignUpForm /> }
 				]
+			},
+			{
+				element: <RootLayout />,
+				children: [{ path: PATHS.HOME, element: <HomePage /> }]
 			}
 		]
 	}
 ];
 
-export const privateRoutes: RouteObject[] = [
-	{
-		element: <App />,
-		children: [
-			{
-				element: <RootLayout />,
-				path: PATHS.ROOT,
-				children: [{ path: PATHS.ROOT, element: <HomePage /> }]
-			}
-		]
-	}
-];
+export default routes;
