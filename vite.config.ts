@@ -18,7 +18,8 @@ export default defineConfig({
 			'@pages': path.resolve(__dirname, './src/pages'),
 			'@types': path.resolve(__dirname, './src/types'),
 			'@lib': path.resolve(__dirname, './src/lib'),
-			'@services': path.resolve(__dirname, './src/services')
+			'@services': path.resolve(__dirname, './src/services'),
+			'@context': path.resolve(__dirname, './src/context')
 		}
 	}
 });
