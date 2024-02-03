@@ -3,12 +3,6 @@ import { account, avatars, databases } from '@lib/appwrite/config';
 import { INewUser } from '@/types/types';
 import { appwriteConfig } from './../lib/appwrite/config';
 
-const userService = {
-	createUserAccount
-};
-
-export default userService;
-
 async function createUserAccount(user: INewUser) {
 	try {
 		const newAccount = await account.create(ID.unique(), user.email, user.password, user.name);
@@ -52,3 +46,10 @@ async function saveUserToDB(user: {
 		console.log(error);
 	}
 }
+
+export const userService = {
+	createUserAccount,
+	saveUserToDB
+};
+
+export default userService;
