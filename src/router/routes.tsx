@@ -7,7 +7,7 @@ import SignInForm from '@auth/forms/SignInForm';
 import SignUpForm from '@auth/forms/SignUpForm';
 
 // pages
-import { HomePage } from '@/pages';
+import { HomePage, NotFoundPage } from '@/pages';
 
 // layouts
 import { AuthLayout, RootLayout } from '@/layouts';
@@ -15,7 +15,6 @@ import { AuthLayout, RootLayout } from '@/layouts';
 const routes: RouteObject[] = [
 	{
 		element: <App />,
-		path: PATHS.ROOT,
 		children: [
 			{
 				element: <AuthLayout />,
@@ -29,6 +28,10 @@ const routes: RouteObject[] = [
 				children: [{ path: PATHS.HOME, element: <HomePage /> }]
 			}
 		]
+	},
+	{
+		path: PATHS.NOT_FOUND,
+		element: <NotFoundPage />
 	}
 ];
 
