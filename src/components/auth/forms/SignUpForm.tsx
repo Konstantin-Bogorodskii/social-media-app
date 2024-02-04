@@ -17,7 +17,6 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 
-import LogoImg from '@assets/images/logo.svg';
 import Loader from '@shared/Loader';
 import { useToast } from '@/components/ui/use-toast';
 import queries from '@lib/react-query/queries';
@@ -81,7 +80,7 @@ const SignUpForm = () => {
 		<Form {...form}>
 			<div className="sm:w-420 flex-center flex-col">
 				<img
-					src={LogoImg}
+					src="assets/images/logo.svg"
 					alt="logo"
 				/>
 

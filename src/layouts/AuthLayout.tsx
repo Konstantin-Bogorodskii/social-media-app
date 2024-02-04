@@ -1,7 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom';
 
-import SideImg from '@assets/images/side-img.svg';
-
 const AuthLayout = () => {
 	const isAuthenticated = false;
 
@@ -16,7 +14,7 @@ const AuthLayout = () => {
 					</section>
 
 					<img
-						src={SideImg}
+						src="assets/images/side-img.svg"
 						alt=""
 						className="hidden xl:block h-screen w-1/2 object-cover bg-no-repeat"
 					/>

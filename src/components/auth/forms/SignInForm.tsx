@@ -1,62 +1,139 @@
-import { z as zod } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Link, useNavigate } from 'react-router-dom';
 
-import { Button } from '@/components/ui/button';
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
 	FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import Loader from '@/components/shared/Loader';
+import { useToast } from '@/components/ui/use-toast';
 
-const formSchema = zod.object({
-	username: zod.string().min(2).max(50)
-});
+import { SignIpFormValidation } from '@/lib/validation/validation';
+import queries from '@/lib/react-query/queries';
+import { useAuthContext } from '@/context/AuthContext';
+
+import PATHS from '@/constants/paths';
 
 const SignInForm = () => {
-	const form = useForm<zod.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
+	const { toast } = useToast();
+	const navigate = useNavigate();
+	const { checkAuthUser, isLoading: isUserLoading } = useAuthContext();
+
+	const { mutateAsync: signInAccount, isPending: isSigningIn } = queries.useSignInAccount();
+
+	const form = useForm<z.infer<typeof SignIpFormValidation>>({
+		resolver: zodResolver(SignIpFormValidation),
 		defaultValues: {
-			username: ''
+			email: '',
+			password: ''
 		}
 	});
 
-	function onSubmit(values: zod.infer<typeof formSchema>) {
-		// Do something with the form values.
-		// ✅ This will be type-safe and validated.
-		console.log(values);
-	}
+	const handleSignIn = async (user: z.infer<typeof SignIpFormValidation>) => {
+		const session = await signInAccount(user);
+
+		if (!session) {
+			toast({ title: 'Login failed. Please try again.' });
+
+			return;
+		}
+
+		const isLoggedIn = await checkAuthUser();
+
+		if (isLoggedIn) {
+			form.reset();
+
+			navigate(PATHS.HOME);
+		} else {
+			toast({ title: 'Login failed. Please try again.' });
+
+			return;
+		}
+	};
 
 	return (
 		<Form {...form}>
-			<form
-				onSubmit={form.handleSubmit(onSubmit)}
-				className="space-y-8">
-				<FormField
-					control={form.control}
-					name="username"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Username</FormLabel>
-							<FormControl>
-								<Input
-									placeholder="shadcn"
-									{...field}
-								/>
-							</FormControl>
-							<FormDescription>This is your public display name.</FormDescription>
-							<FormMessage />
-						</FormItem>
-					)}
+			<div className="sm:w-420 flex-center flex-col">
+				<img
+					src="/assets/images/logo.svg"
+					alt="logo"
 				/>
-				<Button type="submit">Submit</Button>
-			</form>
+
+				<h2 className="h3-bold md:h2-bold pt-5 sm:pt-12">Log in to your account</h2>
+				<p className="text-light-3 small-medium md:base-regular mt-2">
+					Welcome back! Please enter your details.
+				</p>
+				<form
+					onSubmit={form.handleSubmit(handleSignIn)}
+					className="flex flex-col gap-5 w-full mt-4">
+					<FormField
+						control={form.control}
+						name="email"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel className="shad-form_label">Email</FormLabel>
+								<FormControl>
+									<Input
+										type="text"
+										className="shad-input"
+										{...field}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
+					<FormField
+						control={form.control}
+						name="password"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel className="shad-form_label">Password</FormLabel>
+								<FormControl>
+									<Input
+										type="password"
+										className="shad-input"
+										{...field}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
+					<Button
+						type="submit"
+						className="shad-button_primary">
+						{isSigningIn || isUserLoading ? (
+							<div className="flex-center gap-2">
+								<Loader /> Loading...
+							</div>
+						) : (
+							'Log in'
+						)}
+					</Button>
+
+					<p className="text-small-regular text-light-2 text-center mt-2">
+						Don&apos;t have an account?
+						<Link
+							to="/sign-up"
+							className="text-primary-500 text-small-semibold ml-1">
+							Sign up
+						</Link>
+					</p>
+				</form>
+			</div>
 		</Form>
 	);
 };
+
 export default SignInForm;
